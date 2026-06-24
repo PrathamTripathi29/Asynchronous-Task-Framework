@@ -3,13 +3,17 @@ package com.system_design.ATF.services;
 import com.system_design.ATF.dtos.ScheduleTaskRequest;
 import com.system_design.ATF.entity.*;
 import com.system_design.ATF.exception.LambdaNotFoundException;
+import com.system_design.ATF.exception.TaskNotFoundException;
 import com.system_design.ATF.repository.CollectionRepository;
 import com.system_design.ATF.repository.LambdaRepository;
 import com.system_design.ATF.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -62,5 +66,17 @@ public class TaskSchedulingService {
                 .build();
 
         return taskRepository.save(task);
+    }
+
+    public Task getTask(UUID id){
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task with ID " + id + " not found."));
+    }
+
+    public Page<Task> getTasksByLambda(String lambdaName, TaskStatus status, Pageable pageable){
+        if(status != null){
+            return taskRepository.findByLambdaNameAndStatus(lambdaName, status, pageable);
+        }
+        return taskRepository.findByLambdaName(lambdaName, pageable);
     }
 }
