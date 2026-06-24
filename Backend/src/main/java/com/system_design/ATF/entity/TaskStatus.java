@@ -7,7 +7,8 @@ public enum TaskStatus {
     PROCESSING(false),
     RETRIABLE_FAILURE(false),
     SUCCESS(true),
-    FATAL_FAILURE(true);
+    FATAL_FAILURE(true),
+    DROPPED(true);
 
     private final boolean terminal;
 
