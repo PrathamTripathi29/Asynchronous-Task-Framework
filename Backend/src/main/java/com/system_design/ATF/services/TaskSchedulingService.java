@@ -30,8 +30,6 @@ public class TaskSchedulingService {
             return Task.builder().status(TaskStatus.DROPPED).build();
         }
 
-        GateAction activeGate = lambda.getGateAction();
-
         if(request.getCollectionName() != null && !request.getCollectionName().isBlank()){
             Collection collection = collectionRepository.findByLambdaNameAndName(request.getLambdaName(), request.getCollectionName())
                     .orElse(null);
@@ -40,9 +38,6 @@ public class TaskSchedulingService {
                 if(GateAction.DROP.equals(collection.getGateAction())){
                     return Task.builder().status(TaskStatus.DROPPED).build();
                 }
-                if(GateAction.PAUSE.equals(collection.getGateAction())){
-                    activeGate = GateAction.PAUSE;
-                }
             }
         }
 
@@ -50,10 +45,6 @@ public class TaskSchedulingService {
 
         OffsetDateTime scheduledAt = request.getScheduledAt() != null ? request.getScheduledAt() : OffsetDateTime.now();
         OffsetDateTime nextTriggerAt = scheduledAt;
-
-        if(GateAction.PAUSE.equals(activeGate)){
-            nextTriggerAt = OffsetDateTime.now().plusDays(36500);
-        }
 
         Task task = Task.builder()
                 .lambdaName(request.getLambdaName())
