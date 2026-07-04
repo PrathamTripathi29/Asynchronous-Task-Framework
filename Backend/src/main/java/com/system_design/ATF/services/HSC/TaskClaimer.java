@@ -38,7 +38,7 @@ public class TaskClaimer {
 
         Lambda lambda = lambdaRepository.findByName(task.getLambdaName()).orElse(null);
         int claimTimeout = (lambda != null) ? lambda.getClaimTimeoutSeconds() : 300;
-        task.setStatus(TaskStatus.PROCESSING);
+        task.setStatus(TaskStatus.CLAIMED);
         task.setClaimedBy(workerId);
         task.setAttemptCount(task.getAttemptCount() + 1);
         task.setNextTriggerAt(OffsetDateTime.now().plusSeconds(claimTimeout));
