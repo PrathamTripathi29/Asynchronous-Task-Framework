@@ -36,7 +36,7 @@ public class HscControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     // Faking the underlying services so we can test the HTTP layer in isolation
